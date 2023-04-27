@@ -2066,7 +2066,7 @@ Function CreateCentralAdmin ([xml]$xmlInput)
     # Get those Central Admin services that are Online
     $centralAdminServicesOnline = $centralAdminServices | Where-Object {$_.Status -eq "Online"}
     # Get the local Central Admin service
-    $localCentralAdminService = $centralAdminServices | Where-Object {MatchComputerName $_.ServerName.Address $env:COMPUTERNAME}
+    $localCentralAdminService = $centralAdminServices | Where-Object {MatchComputerName $_.Server.Address $env:COMPUTERNAME}
     If ((ShouldIProvision $xmlInput.Configuration.Farm.CentralAdmin -eq $true) -and ($localCentralAdminService.Status -ne "Online"))
     {
         Try
@@ -2096,7 +2096,7 @@ Function CreateCentralAdmin ([xml]$xmlInput)
                     Write-Host -ForegroundColor Cyan "." -NoNewline
                     Start-Sleep 1
                     $centralAdminServices = Get-SPServiceInstance | Where-Object {$_.GetType().ToString() -eq "Microsoft.SharePoint.Administration.SPWebServiceInstance" -and $_.Name -eq "WSS_Administration"}
-                    $localCentralAdminService = $centralAdminServices | Where-Object {MatchComputerName $_.ServerName.Address $env:COMPUTERNAME}
+                    $localCentralAdminService = $centralAdminServices | Where-Object {MatchComputerName $_.Server.Address $env:COMPUTERNAME}
                 }
                 Write-Host -BackgroundColor Green -ForegroundColor Black $($localCentralAdminService.Status)
                 If ($xmlInput.Configuration.Farm.CentralAdmin.UseSSL -eq $true)
@@ -2575,7 +2575,7 @@ Function CreateGenericServiceApplication()
         Write-Host -ForegroundColor White " - Provisioning $serviceName..."
         # get the service instance
         $serviceInstances = Get-SPServiceInstance | Where-Object {$_.GetType().ToString() -eq $serviceInstanceType}
-        $serviceInstance = $serviceInstances | Where-Object {MatchComputerName $_.ServerName.Address $env:COMPUTERNAME}
+        $serviceInstance = $serviceInstances | Where-Object {MatchComputerName $_.Server.Address $env:COMPUTERNAME}
         If (!$serviceInstance)
         {
             Throw " - Failed to get service instance - check product version (Standard vs. Enterprise)"
@@ -2597,7 +2597,7 @@ Function CreateGenericServiceApplication()
                 Write-Host -ForegroundColor Cyan "." -NoNewline
                 Start-Sleep 1
                 $serviceInstances = Get-SPServiceInstance | Where-Object {$_.GetType().ToString() -eq $serviceInstanceType}
-                $serviceInstance = $serviceInstances | Where-Object {MatchComputerName $_.ServerName.Address $env:COMPUTERNAME}
+                $serviceInstance = $serviceInstances | Where-Object {MatchComputerName $_.Server.Address $env:COMPUTERNAME}
             }
             Write-Host -BackgroundColor Green -ForegroundColor Black $($serviceInstance.Status)
         }
@@ -2678,7 +2678,7 @@ Function ConfigureSandboxedCodeService ([xml]$xmlInput)
         WriteLine
         Write-Host -ForegroundColor White " - Starting Sandboxed Code Service"
         $sandboxedCodeServices = Get-SPServiceInstance | Where-Object {$_.GetType().ToString() -eq "Microsoft.SharePoint.Administration.SPUserCodeServiceInstance"}
-        $sandboxedCodeService = $sandboxedCodeServices | Where-Object {MatchComputerName $_.ServerName.Address $env:COMPUTERNAME}
+        $sandboxedCodeService = $sandboxedCodeServices | Where-Object {MatchComputerName $_.Server.Address $env:COMPUTERNAME}
         If ($sandboxedCodeService.Status -ne "Online")
         {
             Try
@@ -2703,7 +2703,7 @@ Function ConfigureSandboxedCodeService ([xml]$xmlInput)
                 Write-Host -ForegroundColor Cyan "." -NoNewline
                 Start-Sleep 1
                 $sandboxedCodeServices = Get-SPServiceInstance | Where-Object {$_.GetType().ToString() -eq "Microsoft.SharePoint.Administration.SPUserCodeServiceInstance"}
-                $sandboxedCodeService = $sandboxedCodeServices | Where-Object {MatchComputerName $_.ServerName.Address $env:COMPUTERNAME}
+                $sandboxedCodeService = $sandboxedCodeServices | Where-Object {MatchComputerName $_.Server.Address $env:COMPUTERNAME}
             }
             Write-Host -BackgroundColor Green -ForegroundColor Black $($sandboxedCodeService.Status)
         }
@@ -2765,7 +2765,7 @@ Function CreateMetadataServiceApp ([xml]$xmlInput)
             Write-Host -ForegroundColor White " - Starting Managed Metadata Service:"
             # Get the service instance
             $metadataServiceInstances = Get-SPServiceInstance | Where-Object {$_.GetType().ToString() -eq "Microsoft.SharePoint.Taxonomy.MetadataWebServiceInstance"}
-            $metadataServiceInstance = $metadataServiceInstances | Where-Object {MatchComputerName $_.ServerName.Address $env:COMPUTERNAME}
+            $metadataServiceInstance = $metadataServiceInstances | Where-Object {MatchComputerName $_.Server.Address $env:COMPUTERNAME}
             If (-not $?)
             {
                 Throw " - Failed to find Metadata service instance"
@@ -2786,7 +2786,7 @@ Function CreateMetadataServiceApp ([xml]$xmlInput)
                     Write-Host -ForegroundColor Cyan "." -NoNewline
                     Start-Sleep 1
                     $metadataServiceInstances = Get-SPServiceInstance | Where-Object {$_.GetType().ToString() -eq "Microsoft.SharePoint.Taxonomy.MetadataWebServiceInstance"}
-                    $metadataServiceInstance = $metadataServiceInstances | Where-Object {MatchComputerName $_.ServerName.Address $env:COMPUTERNAME}
+                    $metadataServiceInstance = $metadataServiceInstances | Where-Object {MatchComputerName $_.Server.Address $env:COMPUTERNAME}
                 }
                 Write-Host -BackgroundColor Green -ForegroundColor Black ($metadataServiceInstance.Status)
             }
@@ -3587,7 +3587,7 @@ Function CreateUserProfileServiceApplication ([xml]$xmlInput)
             Write-Host -ForegroundColor White " - Provisioning $($userProfile.Name)"
             # get the service instance
             $profileServiceInstances = Get-SPServiceInstance | Where-Object {$_.GetType().ToString() -eq "Microsoft.Office.Server.Administration.UserProfileServiceInstance"}
-            $profileServiceInstance = $profileServiceInstances | Where-Object {MatchComputerName $_.ServerName.Address $env:COMPUTERNAME}
+            $profileServiceInstance = $profileServiceInstances | Where-Object {MatchComputerName $_.Server.Address $env:COMPUTERNAME}
             If (-not $?)
             {
                 Throw " - Failed to find User Profile Service instance"
@@ -3608,7 +3608,7 @@ Function CreateUserProfileServiceApplication ([xml]$xmlInput)
                     Write-Host -ForegroundColor Cyan "." -NoNewline
                     Start-Sleep 1
                     $profileServiceInstances = Get-SPServiceInstance | Where-Object {$_.GetType().ToString() -eq "Microsoft.Office.Server.Administration.UserProfileServiceInstance"}
-                    $profileServiceInstance = $profileServiceInstances | Where-Object {MatchComputerName $_.ServerName.Address $env:COMPUTERNAME}
+                    $profileServiceInstance = $profileServiceInstances | Where-Object {MatchComputerName $_.Server.Address $env:COMPUTERNAME}
                 }
                 Write-Host -BackgroundColor Green -ForegroundColor Black $($profileServiceInstance.Status)
             }
@@ -3821,7 +3821,7 @@ Function CreateUserProfileServiceApplication ([xml]$xmlInput)
                 if ($spVer -lt "16") # Since User Profile Sync seems to only apply to SP2010/2013
                 {
                     $profileSyncServices = @(Get-SPServiceInstance | Where-Object {$_.GetType().ToString() -eq "Microsoft.Office.Server.Administration.ProfileSynchronizationServiceInstance"})
-                    $profileSyncService = $profileSyncServices | Where-Object {MatchComputerName $_.ServerName.Address $env:COMPUTERNAME}
+                    $profileSyncService = $profileSyncServices | Where-Object {MatchComputerName $_.Parent.Address $env:COMPUTERNAME}
                     # Attempt to start only if there are no online Profile Sync Service instances in the farm as we don't want to start multiple Sync instances (running against the same Profile Service at least)
                     If (!($profileSyncServices | Where-Object {$_.Status -eq "Online"}))
                     {
@@ -4500,7 +4500,7 @@ Function CreateWebAnalyticsApp ([xml]$xmlInput)
             # Start Analytics service instances
             Write-Host -ForegroundColor White " - Checking Analytics Service instances..."
             $analyticsWebServiceInstances = Get-SPServiceInstance | Where-Object {$_.GetType().ToString() -eq "Microsoft.Office.Server.WebAnalytics.Administration.WebAnalyticsWebServiceInstance"}
-            $analyticsWebServiceInstance = $analyticsWebServiceInstances | Where-Object {MatchComputerName $_.ServerName.Address $env:COMPUTERNAME}
+            $analyticsWebServiceInstance = $analyticsWebServiceInstances | Where-Object {MatchComputerName $_.Server.Address $env:COMPUTERNAME}
             If (-not $?)
             {
                 Throw " - Failed to find Analytics Web Service instance"
@@ -4508,7 +4508,7 @@ Function CreateWebAnalyticsApp ([xml]$xmlInput)
             Write-Host -ForegroundColor White " - Starting local Analytics Web Service instance..."
             $analyticsWebServiceInstance.Provision()
             $analyticsDataProcessingInstances = Get-SPServiceInstance | Where-Object {$_.GetType().ToString() -eq "Microsoft.Office.Server.WebAnalytics.Administration.WebAnalyticsServiceInstance"}
-            $analyticsDataProcessingInstance = $analyticsDataProcessingInstances | Where-Object {MatchComputerName $_.ServerName.Address $env:COMPUTERNAME}
+            $analyticsDataProcessingInstance = $analyticsDataProcessingInstances | Where-Object {MatchComputerName $_.Server.Address $env:COMPUTERNAME}
             If (-not $?)
             {
                 Throw " - Failed to find Analytics Data Processing Service instance"
@@ -4597,7 +4597,7 @@ Function CreateSecureStoreServiceApp ($xmlInput)
             $applicationPool = Get-HostedServicesAppPool $xmlInput
             # Get the service instance
             $secureStoreServiceInstances = Get-SPServiceInstance | Where-Object {$_.GetType().Equals([Microsoft.Office.SecureStoreService.Server.SecureStoreServiceInstance])}
-            $secureStoreServiceInstance = $secureStoreServiceInstances | Where-Object {MatchComputerName $_.ServerName.Address $env:COMPUTERNAME}
+            $secureStoreServiceInstance = $secureStoreServiceInstances | Where-Object {MatchComputerName $_.Server.Address $env:COMPUTERNAME}
             If (-not $?)
             {
                 Throw " - Failed to find Secure Store service instance"
@@ -4618,7 +4618,7 @@ Function CreateSecureStoreServiceApp ($xmlInput)
                     Write-Host -ForegroundColor Cyan "." -NoNewline
                     Start-Sleep 1
                     $secureStoreServiceInstances = Get-SPServiceInstance | Where-Object {$_.GetType().ToString() -eq "Microsoft.Office.SecureStoreService.Server.SecureStoreServiceInstance"}
-                    $secureStoreServiceInstance = $secureStoreServiceInstances | Where-Object {MatchComputerName $_.ServerName.Address $env:COMPUTERNAME}
+                    $secureStoreServiceInstance = $secureStoreServiceInstances | Where-Object {MatchComputerName $_.Server.Address $env:COMPUTERNAME}
                 }
                 Write-Host -BackgroundColor Green -ForegroundColor Black $($secureStoreServiceInstance.Status)
             }
@@ -4673,7 +4673,7 @@ Function StartSearchQueryAndSiteSettingsService ([xml]$xmlInput)
         {
             # Get the service instance
             $searchQueryAndSiteSettingsServices = Get-SPServiceInstance | Where-Object {$_.GetType().ToString() -eq "Microsoft.Office.Server.Search.Administration.SearchQueryAndSiteSettingsServiceInstance"}
-            $searchQueryAndSiteSettingsService = $searchQueryAndSiteSettingsServices | Where-Object {MatchComputerName $_.ServerName.Address $env:COMPUTERNAME}
+            $searchQueryAndSiteSettingsService = $searchQueryAndSiteSettingsServices | Where-Object {MatchComputerName $_.Server.Address $env:COMPUTERNAME}
             If (-not $?)
             {
                 Throw " - Failed to find Search Query and Site Settings service instance"
@@ -4694,7 +4694,7 @@ Function StartSearchQueryAndSiteSettingsService ([xml]$xmlInput)
                     Write-Host -ForegroundColor Cyan "." -NoNewline
                     Start-Sleep 1
                     $searchQueryAndSiteSettingsServices = Get-SPServiceInstance | Where-Object {$_.GetType().ToString() -eq "Microsoft.Office.Server.Search.Administration.SearchQueryAndSiteSettingsServiceInstance"}
-                    $searchQueryAndSiteSettingsService = $searchQueryAndSiteSettingsServices | Where-Object {MatchComputerName $_.ServerName.Address $env:COMPUTERNAME}
+                    $searchQueryAndSiteSettingsService = $searchQueryAndSiteSettingsServices | Where-Object {MatchComputerName $_.Server.Address $env:COMPUTERNAME}
                 }
                 Write-Host -BackgroundColor Green -ForegroundColor Black $($searchQueryAndSiteSettingsService.Status)
             }
@@ -4726,7 +4726,7 @@ Function ConfigureClaimsToWindowsTokenService ([xml]$xmlInput)
         WriteLine
         # Ensure Claims to Windows Token Service is started
         $claimsServices = Get-SPServiceInstance | Where-Object {$_.GetType().ToString() -eq "Microsoft.SharePoint.Administration.Claims.SPWindowsTokenServiceInstance"}
-        $claimsService = $claimsServices | Where-Object {MatchComputerName $_.ServerName.Address $env:COMPUTERNAME}
+        $claimsService = $claimsServices | Where-Object {MatchComputerName $_.Server.Address $env:COMPUTERNAME}
         If ($claimsService.Status -ne "Online")
         {
             Try
@@ -4768,7 +4768,7 @@ Function ConfigureClaimsToWindowsTokenService ([xml]$xmlInput)
                 Write-Host -ForegroundColor Cyan "." -NoNewline
                 Start-Sleep -Seconds 1
                 $claimsServices = Get-SPServiceInstance | Where-Object {$_.GetType().ToString() -eq "Microsoft.SharePoint.Administration.Claims.SPWindowsTokenServiceInstance"}
-                $claimsService = $claimsServices | Where-Object {MatchComputerName $_.ServerName.Address $env:COMPUTERNAME}
+                $claimsService = $claimsServices | Where-Object {MatchComputerName $_.Server.Address $env:COMPUTERNAME}
             }
             Write-Host -BackgroundColor Green -ForegroundColor Black $($claimsService.Status)
         }
@@ -4792,7 +4792,7 @@ Function StopServiceInstance ($service)
 {
     WriteLine
     $serviceInstances = Get-SPServiceInstance | Where-Object {$_.GetType().ToString() -eq $service -and $_.Name -ne "WSS_Administration"} # Need to filter out WSS_Administration because the Central Administration service instance shares the same Type as the Foundation Web Application Service
-    $serviceInstance = $serviceInstances | Where-Object {MatchComputerName $_.ServerName.Address $env:COMPUTERNAME}
+    $serviceInstance = $serviceInstances | Where-Object {MatchComputerName $_.Server.Address $env:COMPUTERNAME}
     Write-Host -ForegroundColor White " - Stopping $($serviceInstance.TypeName)..."
     if ($serviceInstance.Status -eq "Online")
     {
@@ -4808,7 +4808,7 @@ Function StopServiceInstance ($service)
             Write-Host -ForegroundColor Cyan "." -NoNewline
             Start-Sleep 1
             $serviceInstances = Get-SPServiceInstance | Where-Object {$_.GetType().ToString() -eq $service}
-            $serviceInstance = $serviceInstances | Where-Object {MatchComputerName $_.ServerName.Address $env:COMPUTERNAME}
+            $serviceInstance = $serviceInstances | Where-Object {MatchComputerName $_.Server.Address $env:COMPUTERNAME}
         }
         Write-Host -BackgroundColor Green -ForegroundColor Black $($serviceInstance.Status -replace "Disabled","Stopped")
     }
@@ -4966,7 +4966,7 @@ Function ConfigureDistributedCacheService ([xml]$xmlInput)
         # Check if we should disable the Distributed Cache service on the local server
         # Ensure the node exists in the XML first as we don't want to inadvertently disable the service if it wasn't explicitly specified
         $serviceInstances = Get-SPServiceInstance | Where-Object {$_.GetType().ToString() -eq "Microsoft.SharePoint.DistributedCaching.Utilities.SPDistributedCacheServiceInstance"}
-        $serviceInstance = $serviceInstances | Where-Object {MatchComputerName $_.ServerName.Address $env:COMPUTERNAME}
+        $serviceInstance = $serviceInstances | Where-Object {MatchComputerName $_.Server.Address $env:COMPUTERNAME}
         # Check if we are installing SharePoint 2016 and have requested a MinRole that requires (or complies with) Distributed Cache
         if ($spVer -ge 16)
         {
@@ -5291,7 +5291,7 @@ function CreateEnterpriseSearchServiceApp ([xml]$xmlInput)
                 If ($installSyncSvc) {
                     # SLN: Updated to new syntax
                     $searchQueryAndSiteSettingsServices = Get-SPServiceInstance | Where-Object {$_.GetType().ToString() -eq "Microsoft.Office.Server.Search.Administration.SearchQueryAndSiteSettingsServiceInstance"}
-                    $searchQueryAndSiteSettingsService = $searchQueryAndSiteSettingsServices | Where-Object {MatchComputerName $_.ServerName.Address $env:COMPUTERNAME}
+                    $searchQueryAndSiteSettingsService = $searchQueryAndSiteSettingsServices | Where-Object {MatchComputerName $_.Server.Address $env:COMPUTERNAME}
                     If (-not $?) { Throw " - Failed to find Search Query and Site Settings service instance" }
                     # Start Service instance
                     Write-Host -ForegroundColor White " - Starting Search Query and Site Settings Service Instance..."
@@ -5306,7 +5306,7 @@ function CreateEnterpriseSearchServiceApp ([xml]$xmlInput)
                             Write-Host -ForegroundColor Cyan "." -NoNewline
                             Start-Sleep 1
                             $searchQueryAndSiteSettingsServices = Get-SPServiceInstance | Where-Object {$_.GetType().ToString() -eq "Microsoft.Office.Server.Search.Administration.SearchQueryAndSiteSettingsServiceInstance"}
-                            $searchQueryAndSiteSettingsService = $searchQueryAndSiteSettingsServices | Where-Object {MatchComputerName $_.ServerName.Address $env:COMPUTERNAME}
+                            $searchQueryAndSiteSettingsService = $searchQueryAndSiteSettingsServices | Where-Object {MatchComputerName $_.Server.Address $env:COMPUTERNAME}
                         }
                         Write-Host -BackgroundColor Green -ForegroundColor Black $($searchQueryAndSiteSettingsService.Status)
                     }
@@ -6112,7 +6112,7 @@ Function CreateBusinessDataConnectivityServiceApp ([xml]$xmlInput)
             Write-Host -ForegroundColor White " - Checking local service instance..."
             # Get the service instance
             $bdcServiceInstances = Get-SPServiceInstance | Where-Object {$_.GetType().ToString() -eq "Microsoft.SharePoint.BusinessData.SharedService.BdcServiceInstance"}
-            $bdcServiceInstance = $bdcServiceInstances | Where-Object {MatchComputerName $_.ServerName.Address $env:COMPUTERNAME}
+            $bdcServiceInstance = $bdcServiceInstances | Where-Object {MatchComputerName $_.Server.Address $env:COMPUTERNAME}
             If (-not $?) { Throw " - Failed to find the service instance" }
             # Start Service instances
             If($bdcServiceInstance.Status -eq "Disabled")
@@ -6127,7 +6127,7 @@ Function CreateBusinessDataConnectivityServiceApp ([xml]$xmlInput)
                     Write-Host -ForegroundColor Cyan "." -NoNewline
                     Start-Sleep 1
                     $bdcServiceInstances = Get-SPServiceInstance | Where-Object {$_.GetType().ToString() -eq "Microsoft.SharePoint.BusinessData.SharedService.BdcServiceInstance"}
-                    $bdcServiceInstance = $bdcServiceInstances | Where-Object {MatchComputerName $_.ServerName.Address $env:COMPUTERNAME}
+                    $bdcServiceInstance = $bdcServiceInstances | Where-Object {MatchComputerName $_.Server.Address $env:COMPUTERNAME}
                 }
                 Write-Host -BackgroundColor Green -ForegroundColor Black ($bdcServiceInstance.Status)
             }
@@ -6229,7 +6229,7 @@ Function CreateExcelServiceApp ([xml]$xmlInput)
                 Write-Host -ForegroundColor White " - Checking local service instance..."
                 # Get the service instance
                 $excelServiceInstances = Get-SPServiceInstance | Where-Object {$_.GetType().ToString() -eq "Microsoft.Office.Excel.Server.MossHost.ExcelServerWebServiceInstance"}
-                $excelServiceInstance = $excelServiceInstances | Where-Object {MatchComputerName $_.ServerName.Address $env:COMPUTERNAME}
+                $excelServiceInstance = $excelServiceInstances | Where-Object {MatchComputerName $_.Server.Address $env:COMPUTERNAME}
                 If (-not $?) { Throw " - Failed to find the service instance" }
                 # Start Service instances
                 If($excelServiceInstance.Status -eq "Disabled")
@@ -6244,7 +6244,7 @@ Function CreateExcelServiceApp ([xml]$xmlInput)
                         Write-Host -ForegroundColor Cyan "." -NoNewline
                         Start-Sleep 1
                         $excelServiceInstances = Get-SPServiceInstance | Where-Object {$_.GetType().ToString() -eq "Microsoft.Office.Excel.Server.MossHost.ExcelServerWebServiceInstance"}
-                        $excelServiceInstance = $excelServiceInstances | Where-Object {MatchComputerName $_.ServerName.Address $env:COMPUTERNAME}
+                        $excelServiceInstance = $excelServiceInstances | Where-Object {MatchComputerName $_.Server.Address $env:COMPUTERNAME}
                     }
                     Write-Host -BackgroundColor Green -ForegroundColor Black ($excelServiceInstance.Status)
                 }
@@ -7082,7 +7082,7 @@ Function ConfigureFoundationWebApplicationService ([xml]$xmlInput)
 			$serviceInstanceType = "Microsoft.SharePoint.Administration.SPWebServiceInstance"
 			# Get all occurrences of the Foundation Web App Service except those which are actually Central Administration instances
 			$serviceInstances = Get-SPServiceInstance | Where-Object {$_.GetType().ToString() -eq $serviceInstanceType -and $_.Name -ne "WSS_Administration"}
-			$serviceInstance = $serviceInstances | Where-Object {MatchComputerName $_.ServerName.Address $env:COMPUTERNAME}
+			$serviceInstance = $serviceInstances | Where-Object {MatchComputerName $_.Server.Address $env:COMPUTERNAME}
 			If (!$serviceInstance) { Throw " - Failed to get service instance - check product version (Standard vs. Enterprise)" }
 			Write-Host -ForegroundColor White " - Checking $($serviceInstance.TypeName) instance..."
 			If (($serviceInstance.Status -eq "Disabled") -or ($serviceInstance.Status -ne "Online"))
@@ -7097,7 +7097,7 @@ Function ConfigureFoundationWebApplicationService ([xml]$xmlInput)
 					Write-Host -ForegroundColor Cyan "." -NoNewline
 					Start-Sleep 1
 					$serviceInstances = Get-SPServiceInstance | Where-Object {$_.GetType().ToString() -eq $serviceInstanceType}
-					$serviceInstance = $serviceInstances | Where-Object {MatchComputerName $_.ServerName.Address $env:COMPUTERNAME}
+					$serviceInstance = $serviceInstances | Where-Object {MatchComputerName $_.Server.Address $env:COMPUTERNAME}
 				}
 					Write-Host -BackgroundColor Green -ForegroundColor Black $($serviceInstance.Status)
 			}
